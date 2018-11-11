@@ -1,1 +1,1 @@
-# Mineral-Stability
+# Geochem-project
