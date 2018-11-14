@@ -19,6 +19,21 @@ date: "`r Sys.Date()`"
 # Introduction
 In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as microcline (potassium feldspar) reacts with a typical acidic soil water.
 
+Mineral Stability Diagrams tell us what minerals are stable and what are not given a specific water chemistry. When a mineral is unstable it is a __reactant_ that will _weather_ into a _product_. 
+The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
+
+The x-axis of the diagram is log[H4SiO4], which is silicic acid. The Y-axis in this case will be log [K+]/[H+]. While the X-axis will always be silicic acid, the Y-axis can have different cations depending on the mineral system of interest.
+The equations that we will use are listed below
+**list all the equations along with the gibbs or just give them the Keq**
+
+# Question 1) Using these equations, write out the equations that will make up the mineral phase diagram. Turn these equations in along with your work.
+
+**This is where they should do all the equation work. Potential here to add in an example, or potential here to instead have them answer questions like which one has a nevative slope, which one has a positive slope, or which one is a flat line... etc. **
+
+
+
+Now that you have successfully derived the equations necessary for the mineral phase diagram, we will use Rstudio to build the mineral phase diagram.
+
 Our calculations are adapted from the model of Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197), which were based the following assumptions:
 
 1. The system is closed and the water/rock ratio is small.
@@ -26,6 +41,7 @@ Our calculations are adapted from the model of Steinmann et al., 1994 (http://cc
 3. Temperature and pressure are constant.
 4. Aluminum is conserved in the reactions.
 5. The solutions remain dilute such that all activity coefficients are close to unity.
+
 
 # Setup
 
@@ -539,4 +555,4 @@ JHR - Plot accumulation of minerals with reaction progress as area chart - not c
 # ggplotly(plot_minerals_rxns_1_2_3_4_area)
 ```
 
-
+##STUDENT QUESTION: Using the same phase diagram, draw out the pathway you expect the water chemistry to take if we start with _____ and _____. Draw this on your phase diagram given to you in class and turn it in. 
