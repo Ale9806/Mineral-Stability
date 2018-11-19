@@ -22,26 +22,23 @@ In this R markdown file, we calculate and visualize changes in water chemistry a
 Mineral stability diagrams illustrate which minerals are thermodynamically stable given specific water chemistry conditions. When a _primary mineral_, which is often igneous or metamorphic, comes into contact with a water with which it is not in thermodynamic equilibrium, it reacts (_weathers_) into a _secondary mineral_ product. 
 The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
 \fra
-The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. While the X-axis will always be silicic acid, the Y-axis can have different cations depending on the mineral system of interest.
-You should have already derived all the weathering reactions that are relevant for the phase diagram we are building. For your reference, they are listed below.
+The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$.  The Y-axis can have different cations depending on the mineral system of interest.
+You should have already derived all the weathering reactions that are relevant for the phase diagram we are building. For your reference, they are listed below. The equations are written in LaTeX format. Mouse over the equation to read it more easily. 
 
 
-$2 KAlSi_{3}O_{8} + 9 H_{2}O + 2 H^{+} \leftrightharpoons Al_{2}Si_{2}O_{5}(OH)_{4} + 2 K^{+} + 4H_{4}SiO_{4},    Keq = 10^{-5.21}$ 
-$KAlSi_{3}O_{8} + H^{+} + 7H_{2}O \leftrightharpoons Al(OH)_{3} + 2K^{+} + 3H_{4}SiO_{4}. Keq = $
-$KAlSi_{3}O_{8} + 2Al(OH)_{3} + H^{+}  \leftrightharpoons 1.5Al_{2}Si_{2}O_{5}(OH)_{4} + K^{+} + 0.5H_{2}O, Keq = $
-$2KAlSi_{3}O_{8} + 2H^{+} + 9H_{2}O \leftrightharpoons Al_{2}Si_{2}O_{5}(OH)_{4} + 2K^{+} + 4H_{4}SiO_{4}, Keq = $
+$2 KAlSi_{3}O_{8} + 9 H_{2}O + 2 H^{+} \leftrightharpoons Al_{2}Si_{2}O_{5}(OH)_{4} + 2 K^{+} + 4H_{4}SiO_{4},    K_{eq} = 10^{-5.21}$ 
+$KAlSi_{3}O_{8} + H^{+} + 7H_{2}O \leftrightharpoons Al(OH)_{3} + 2K^{+} + 3H_{4}SiO_{4}. K_{eq} = $
+$KAlSi_{3}O_{8} + 2Al(OH)_{3} + H^{+}  \leftrightharpoons 1.5Al_{2}Si_{2}O_{5}(OH)_{4} + K^{+} + 0.5H_{2}O, K_{eq} = $
+$2KAlSi_{3}O_{8} + 2H^{+} + 9H_{2}O \leftrightharpoons Al_{2}Si_{2}O_{5}(OH)_{4} + 2K^{+} + 4H_{4}SiO_{4}, K_{eq} = $
 
 
-**Question 1**: Using these equations and the Keq provided, write out the equations that will make up the mineral phase diagram. Remember that the lines are in the general linear form Y = mX + b. The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. Turn these equations in along with your work. *It is very helpful to remember your log rules when solving these equations.* 
-
-**Question 2**: Which axis tells you about pH? How do you know this? 
-
+**Question 1**: Using these equations and the Keq provided, write out the equations that will make up the mineral phase diagram. Remember that the lines are in the general linear form Y = mX + b. The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. Turn these equations in along with your work. *It is very helpful to remember your log rules when solving these equations. There is a Exponent and Logarithm Rule Cheat Sheet in the repository for your reference.* 
 
 Now that you have successfully derived the equations necessary for the mineral phase diagram, we will use Rstudio to build the mineral phase diagram. You can absolutely build a phase diagram by hand. However, the following Rmarkdown will walk you through how to use a phase diagram to determine how water chemistry changes as a mineral weathers. 
 
 Our calculations are adapted from the model of Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197), which were based the following assumptions:
 
-1. The system is closed and the water/rock ratio is small.
+1. The system is closed and the water/rock ratio is small. This is akin to having almost an infinite amount of rock that is able to be weathered.
 2. The secondary minerals are in equilibrium with ions in the solution even though the primary minerals are not in equilibrium.
 3. Temperature and pressure are constant.
 4. Aluminum is conserved in the reactions.
