@@ -153,7 +153,7 @@ plot_k_spar_to_gibbs
 
 #  Reaction 2: K feldspar weathering, gibbsite converted to kaolinite
 
-Now our initial reaction conditions has changed. Now, we have some gibbsite in our system that was produced by K-feldspar weathering. However, not all of the K-feldspar could be weathered into gibbsite before the water chemistry has moved to a new stability phase. Before we can continue our path, the gibbsite which is now unstable, must be reacted. Think of the phase boundary as a gate. In our case, the gate will not let any gibbsite through, only kaolinite. So, all of this gibbsite must be reacted into kaolinite before we can continue evolving the water chemistry.
+Now, we have some gibbsite in our system that was produced by K-feldspar weathering. However, if reaction 1 were to continue, the water chemistry would move out of the field of gibbsite stability. Yet, microcline is not in equilibrium with the water yet either. Thus, in order to approach stability with microcline, all gibbsite must be consumed (reaction 2).
 
 KAlSi$_3$O$_8$ + 2Al(OH)$_3$ + H$^+$  $\leftrightharpoons$ 1.5Al$_2$Si$_2$O$_5$(OH)$_4$ + K$^+$ + 0.5H$_2$O
 
