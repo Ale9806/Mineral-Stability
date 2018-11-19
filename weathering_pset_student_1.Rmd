@@ -94,7 +94,7 @@ $[K^{+} = 1e^{-4}] $ Note that this is the same as the moles of microcline
 $pH = 4$
 In the code below, you can change the pH to see how it changes the initial condition and pathway the water chemistry evolves along. However, for this example, we will start with pH 4. Remember that $ pH = -log[H^{+}]$.
 
-When ploting the initial water chemistry point, you should notice that it sits within the gibbsite field. This is not in equilibrium with our mineral, microcline. Meaning, microcline (K-feldspar) is NOT stable in this water chemistry. 
+When plotting the initial water chemistry point, you should notice that it sits within the gibbsite field. This indicates that microcline (K-feldspar) is NOT stable in this water chemistry. 
 
 The next question is now which weathering reaction should we use for this initial step? Well, we know that we have K-feldspar and that our water chemistry is in the gibbsite field. So, the weathering reaction we use first will be K-feldspar to Gibbsite. The following R code chunks will walk you though how this calculatin was done. While it is good to know how to do this by hand, it is easier to see the evolution using a computer to calculate each step.
 
