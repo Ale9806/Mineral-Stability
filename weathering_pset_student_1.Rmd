@@ -233,7 +233,7 @@ plot_minerals_rxns_1_2
 
 # Reaction 3: K feldspar weathering to kaolinite
 
-Now, all of our gibbsite has been reacted into kaolinite. However, we still have some K-feldspar left, and our water chemistry is now within the kaolinite stability field. So, our next weathering reaction we are concerned with is the K-feldspar/kaolinite system. 
+Now, all of our gibbsite has been reacted into kaolinite. However, K-feldspar is still not in equilibrium with the water water chemistry, and further reaction will move through the kaolinite stability field.
 
 KAlSi$_3$O$_8$ + H$^+$ + 7H$_2$O $\leftrightharpoons$ Al(OH)$_3$ + 2K$^+$ + 3H$_4$SiO$_4$
 
