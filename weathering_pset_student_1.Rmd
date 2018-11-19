@@ -89,7 +89,7 @@ We are going to start with the single mineral microcline in typical acidic soil 
 $[H_{4}SiO_{4}] = 1e^{-6}$
 $[K^{+}] = 1e^{-4}]$
 $pH = 4$
-In the code below, you can change the pH to see how it changes the initial condition and pathway the water chemistry evolves along. However, for this example, we will start with pH 4. Remember that $ pH = -log[H^{+}]$.
+Remember that $ pH = -log[H^{+}]$.
 
 When plotting the initial water chemistry point, you should notice that it sits within the gibbsite field. This indicates that microcline (K-feldspar) is NOT stable in this water chemistry. 
 
