@@ -19,7 +19,7 @@ date: "`r Sys.Date()`"
 # Introduction
 In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as microcline (potassium feldspar) reacts with a typical acidic soil water.
 
-Mineral Stability Diagrams tell us what minerals are stable and what are not given a specific water chemistry. When a mineral is unstable it is a __reactant_ that will _weather_ into a _product_. 
+Mineral stability diagrams illustrate which minerals are thermodynamically stable given specific water chemistry conditions. When a _primary mineral_, which is often igneous or metamorphic, comes into contact with a water with which it is not in thermodynamic equilibrium, it reacts (_weathers_) into a _secondary mineral_ product. 
 The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
 \fra
 The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. While the X-axis will always be silicic acid, the Y-axis can have different cations depending on the mineral system of interest.
