@@ -87,7 +87,7 @@ legend("bottomleft", describe.property(c("T", "P"), c(25, 1)), bty = "n")
 
 We are going to start with the single mineral microcline in typical acidic soil water.
 $[H_{4}SiO_{4}] = 1e^{-6}$
-$[K^{+} = 1e^{-4}] $ Note that this is the same as the moles of microcline
+$[K^{+}] = 1e^{-4}]$
 $pH = 4$
 In the code below, you can change the pH to see how it changes the initial condition and pathway the water chemistry evolves along. However, for this example, we will start with pH 4. Remember that $ pH = -log[H^{+}]$.
 
