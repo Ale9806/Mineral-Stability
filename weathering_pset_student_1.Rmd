@@ -12,14 +12,14 @@ output:
     df_print: paged
 subtitle: "Source file: weathering_pset.Rmd"
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 date: "`r Sys.Date()`"
 ---
 
 # Introduction
-In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as microcline (potassium feldspar) reacts with a typical acidic soil water.
+In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as the igneous _primary mineral_ microcline (a form of potassium feldspar) reacts with a typical, mildly acidic soil water.
 
-Mineral Stability Diagrams tell us what minerals are stable and what are not given a specific water chemistry. When a mineral is unstable it is a __reactant_ that will _weather_ into a _product_. 
+Mineral stability diagrams describe which minerals are stable given a specific water chemistry. When a mineral is unstable it is a _reactant_ that will _weather_ into a _product_, also known as a _secondary mineral_. 
 The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
 
 The x-axis of the diagram is log[H4SiO4], which is silicic acid. The Y-axis in this case will be log [K+]/[H+]. While the X-axis will always be silicic acid, the Y-axis can have different cations depending on the mineral system of interest.
@@ -80,16 +80,89 @@ title(main = syslab(c("K2O", "Al2O3", "SiO2", "H2O")))
 legend("bottomleft", describe.property(c("T", "P"), c(25, 1)), bty = "n")
 ```
 
+test blank plot
+```{r fig.height=6, fig.width=6}
+plot_stability_blank <- ggplot()+
+  #geom_point() +
+  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_blank
+```
+
+test segment plot
+```{r fig.height=4, fig.width=4}
+plot_stability_segment <- ggplot()+
+  geom_vline(xintercept = -4.68) +
+  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_linedraw()+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_segment
+```
+
+test segment plot 2
+```{r fig.height=4, fig.width=4}
+plot_stability_segment2 <- ggplot()+
+  geom_vline(xintercept = -4.68) +
+  geom_abline(intercept = -9.97, slope = -3) +
+  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_segment2
+```
+
+
+```{r}
+gibbs_intersect_KH <- -3*-4.68-9.97
+gibbs_intersect_KH
+```
+
+test segment plot 3
+```{r fig.height=4, fig.width=4}
+plot_stability_segment3 <- ggplot()+
+  geom_segment(aes(x = -4.68, y = gibbs_intersect_KH, xend = -4.68, yend = -3))+
+  geom_segment(aes(x = -4.68, y = gibbs_intersect_KH, xend = -5.323333, yend = 6))+
+  #geom_vline(xintercept = -4.68) +
+  #geom_abline(intercept = -9.97, slope = -3) +
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  #scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_segment3
+```
 
 # Reaction 1: K feldspar weathering to gibbsite
 
 KAlSi$_3$O$_8$ + H$^+$ + 7H$_2$O $\leftrightharpoons$ Al(OH)$_3$ + 2K$^+$ + 3H$_4$SiO$_4$
+KAlSi$_3$O$_8$ + H$^+$ + 7H$_2$O $\leftrightharpoons$ Al(OH)$_3$ + 2K$^+$ + 3H$_4$SiO$_4$
+$\text{KAlSi}_3\text{O}_8 + \text{H}^+ + 7\text{H}_2\text{O} \leftrightharpoons \text{Al(OH)}_3 + 2\text{K}^+ + 3\text{H}_4\text{SiO}_4 \space \text{(reaction 1)}$
 
 Initial conditions, reaction 1
 ```{r}
 #initial conditions are no secondary minerals (only primary mineral, microcline), and water chemistry of typical acidic soil
 mol_gibbs_A <- 0 # moles gibbsite at t0
-mol_l_H_A <- #### ENTER PROTON CONCENTRATION OF A TYPICAL ACIDIC SOIL, pH =4  # moles per liter H+ t0
+mol_l_H_A <- 1e-4#### ENTER PROTON CONCENTRATION OF A TYPICAL ACIDIC SOIL, pH =4  # moles per liter H+ t0
 mol_l_K_A <- 1e-6 # moles per liter K+ t0
 mol_l_H4SiO4_A <- 1e-6 # moles per liter H4SiO4 t0 
 mol_kaol_A <- 0 # moles kaolinite t0
@@ -126,7 +199,7 @@ plot_k_spar_to_gibbs <- k_spar_to_gibbs %>% ggplot(aes(x=log_H4SiO4, y = log_K_H
   geom_point() +
   scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
-  scale_color_continuous(name = TeX("rxn progress, $\\xi$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
   annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
   annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
