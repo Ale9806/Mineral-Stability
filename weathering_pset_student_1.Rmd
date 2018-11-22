@@ -1,5 +1,5 @@
 ---
-title: "K Feldspar Weathering"
+title: "Mineral Stability Diagrams: K Feldspar Weathering"
 output:
   html_document:
     css: stylesheet.css
@@ -17,31 +17,31 @@ date: "`r Sys.Date()`"
 ---
 
 # Introduction
-In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as the igneous _primary mineral_ microcline (a form of potassium feldspar) reacts with a typical, mildly acidic soil water.
+## Technical prerequisites
+* none
 
-Mineral stability diagrams describe which minerals are stable given a specific water chemistry. When a mineral is unstable it is a _reactant_ that will _weather_ into a _product_, also known as a _secondary mineral_. 
-The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
+## Conceptual prerequisites
+* familiarity with mineral stability diagrams
+* using log rules to linearize equilibria
+* plotting in log space
 
-The x-axis of the diagram is log[H4SiO4], which is silicic acid. The Y-axis in this case will be log [K+]/[H+]. While the X-axis will always be silicic acid, the Y-axis can have different cations depending on the mineral system of interest.
-The equations that we will use are listed below
-**list all the equations along with the gibbs or just give them the Keq**
+## Learning goals
+* plot equilibrium lines on a mineral stability diagram using R
+* improve visualization of reaction paths
+* connect groundwater chemistry to mineral assemblages
 
-# Question 1) Using these equations, write out the equations that will make up the mineral phase diagram. Turn these equations in along with your work.
+## Background information
+Mineral stability diagrams describe which minerals are stable given a specific water chemistry. When a mineral is unstable, it is a _reactant_ that will _weather_ into a _product_, also known as a _secondary mineral_. 
 
-**This is where they should do all the equation work. Potential here to add in an example, or potential here to instead have them answer questions like which one has a nevative slope, which one has a positive slope, or which one is a flat line... etc. **
+In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as the igneous _primary mineral_ microcline (a form of potassium feldspar) reacts with a typical, mildly acidic soil water. Weathering is a ubiquitous process on Earth's surface that is of fundamental importance due to its impact on the aqueous chemistry and mineralogy, as we will observe.
 
+By the way, R markdown documents are fully reproducible, and use a productive notebook interface to weave together narrative text and code to produce elegantly formatted output. All the cool kids are using it!
 
+Before diving into the chemistry, let's visualize the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system.
 
-Now that you have successfully derived the equations necessary for the mineral phase diagram, we will use Rstudio to build the mineral phase diagram.
+Woah, wait up... what are those weird money signs and brackets about? That's using the $\TeX$ typesetting system to beautify equations and other science-y things. R markdown will format that when you 'knit' the document (more on that later), but for now, you can mouse over anything in money signs to display a rendered version. Try it!
 
-Our calculations are adapted from the model of Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197), which were based the following assumptions:
-
-1. The system is closed and the water/rock ratio is small.
-2. The secondary minerals are in equilibrium with ions in the solution even though the primary minerals are not in equilibrium.
-3. Temperature and pressure are constant.
-4. Aluminum is conserved in the reactions.
-5. The solutions remain dilute such that all activity coefficients are close to unity.
-
+First, we need to load some packages. Packages contain functions that other smarty-pants wizards wrote. That's one great thing about R: no need to re-invent the wheel. Run this code chunk by pressing the green arrow in the right hand corner of the gray box below, or move your cursor into the chunk and press Ctrl+Alt+C (Windows) command+option+C (Mac).
 
 # Setup
 
@@ -60,8 +60,8 @@ opts_chunk$set(
   )
 ```
 
-# Mineral stability diagram K$_2$O - Al$_2$O$_3$ - SiO$_2$ - H$_2$O system
-The weathering reactions we will discuss are based on varying water chemical compositions within the mineral stability diagram plotted below.
+# Mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system
+Now, run the next chunk to generate the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system.
 
 ```{r fig.width=10, fig.height=10, warning=FALSE, error=FALSE}
 par(mfrow = c(2, 2))
@@ -79,6 +79,35 @@ diagram(a, ylab = ratlab("K+"), fill = fill, yline = 1.7)
 title(main = syslab(c("K2O", "Al2O3", "SiO2", "H2O")))
 legend("bottomleft", describe.property(c("T", "P"), c(25, 1)), bty = "n")
 ```
+
+
+
+The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
+
+The x-axis of the diagram is log[H4SiO4], which is silicic acid. The Y-axis in this case will be log [K+]/[H+]. While the X-axis will always be silicic acid, the Y-axis can have different cations depending on the mineral system of interest.
+The equations that we will use are listed below
+**list all the equations along with the gibbs or just give them the Keq**
+
+## Question 1) Using these equations, write out the equations that will make up the mineral phase diagram. Turn these equations in along with your work.
+
+**This is where they should do all the equation work. Potential here to add in an example, or potential here to instead have them answer questions like which one has a nevative slope, which one has a positive slope, or which one is a flat line... etc. **
+
+
+
+Now that you have successfully derived the equations necessary for the mineral phase diagram, we will use Rstudio to build the mineral phase diagram.
+
+Our calculations are adapted from the model of Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197), which were based the following assumptions:
+
+1. The system is closed and the water/rock ratio is small.
+2. The secondary minerals are in equilibrium with ions in the solution even though the primary minerals are not in equilibrium.
+3. Temperature and pressure are constant.
+4. Aluminum is conserved in the reactions.
+5. The solutions remain dilute such that all activity coefficients are close to unity.
+
+
+
+
+
 
 test blank plot
 ```{r fig.height=6, fig.width=6}
@@ -196,7 +225,7 @@ k_spar_to_gibbs <- k_spar_to_gibbs %>% mutate(mol_l_H = mol_l_H_A + co_H_1 * ste
 Plot evolution of water chemistry during k feldspar weathering to gibbsite
 ```{r fig.height=6, fig.width=6}
 plot_k_spar_to_gibbs <- k_spar_to_gibbs %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color = steps))+
-  geom_point() +
+  geom_line(size=2, alpha =1) +
   scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
