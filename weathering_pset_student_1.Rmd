@@ -2,8 +2,9 @@
 title: "Mineral Stability Diagrams: K Feldspar Weathering"
 output:
   html_document:
-    css: stylesheet.css    fig_caption: yes
-    number_sections: no
+    css: stylesheet.css
+    fig_caption: yes
+    number_sections: yes
     toc: yes
     toc_float: true
     toc_depth: 3
@@ -14,6 +15,8 @@ editor_options:
   chunk_output_type: inline
 date: "`r Sys.Date()`"
 ---
+
+
 
 # Introduction
 ## Technical prerequisites
@@ -262,14 +265,14 @@ mol_kaol_B <- k_spar_to_gibbs$mol_kaol[2601]# moles kaolinite at end of reaction
 mol_musc_B <- k_spar_to_gibbs$mol_musc[2601]# moles muscovite at end of reaction 1 (point B)
 
 # USER INPUT : coefficients of change for weathering of k spar with conversion of gibbsite to kaolinite (reaction 2)
-co_spar_2 <- ##
-co_H_2 <- ##
-co_H2O_2 <- ##
-co_gibbs_2 <- ##
-co_K_2 <- ##
-co_H4SiO4_2 <- ##
-co_kaol_2 <- ##
-co_musc_2 <- ##
+co_spar_2 <- -1##
+co_H_2 <- -1##
+co_H2O_2 <- .5##
+co_gibbs_2 <- -2##
+co_K_2 <- 1##
+co_H4SiO4_2 <- 0##
+co_kaol_2 <- 1.5##
+co_musc_2 <- 0##
 ```
 
 Make data frame of reaction steps
@@ -659,7 +662,7 @@ JHR - Plot accumulation of minerals with reaction progress as bar plot using gga
 
 
 JHR - Plot accumulation of minerals with reaction progress as area chart - not currently working
-```{r fig.height=6, fig.width=6}
+```{r fig.height=6, fig.width=6, warning=FALSE}
 # plot_minerals_rxns_1_2_3_4_area <- reactions_1_2_3_4 %>%
 #   ggplot() +
 #   geom_area(aes(x=steps, y=mol_musc + mol_gibbs + mol_kaol, fill = "moles muscovite"))+
