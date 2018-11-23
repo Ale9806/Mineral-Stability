@@ -1,5 +1,5 @@
 ---
-title: "K Feldspar Weathering"
+title: "Mineral Stability Diagrams: K Feldspar Weathering"
 output:
   html_document:
     css: stylesheet.css    fig_caption: yes
@@ -11,43 +11,36 @@ output:
     df_print: paged
 subtitle: "Source file: weathering_pset.Rmd"
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 date: "`r Sys.Date()`"
 ---
 
 # Introduction
-In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as microcline (potassium feldspar) reacts with a typical acidic soil water.
+## Technical prerequisites
+* none
 
-Mineral stability diagrams illustrate which minerals are thermodynamically stable given specific water chemistry conditions. When a _primary mineral_, which is often igneous or metamorphic, comes into contact with a water with which it is not in thermodynamic equilibrium, it reacts (_weathers_) into a _secondary mineral_ product. 
-The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium. 
-\fra
-The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$.  The Y-axis can have different cations depending on the mineral system of interest.
-You should have already derived all the weathering reactions that are relevant for the phase diagram we are building. For your reference, they are listed below. The equations are written in LaTeX format. Mouse over the equation to read it more easily. 
+## Conceptual prerequisites
+* familiarity with mineral stability diagrams
+* using log rules to linearize equilibria
+* plotting in log space
 
+## Learning goals
+* plot equilibrium lines on a mineral stability diagram using R
+* improve visualization of reaction paths
+* connect groundwater chemistry to mineral assemblages
 
-**Gibbsite to Kaolinite**
-$2\text{Al}\text{(OH)}_3 + 2\text{H}_4\text{SiO}_4 \leftrightharpoons \text{Al}_3\text{Si}_2\text{O}_5\text{(OH)}_4 + 5\text{H}_2\text{O} \space  \text {,K}_{eq} \text= \text{10}^{9.35} \space \text{(reaction 2)}$ 
-**K-feldspar to Kaolinite**
-$2\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 9\text{H}_2\text{O} \leftrightharpoons  \text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2\text{K}^+ + 4\text{H}_{4}\text{SiO}_{4} \space \text {,K}_{eq} \text {=} \text {10}^{-5.21} \space \text{(reaction 3)}$
-**Muscovite to Kaolinite**
-$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+ \space \text{,K}_{eq} = \text{10}^{8.11} \space \text{(reaction 4)}$
-**K-feldspar to Muscovite**
-$3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4}\space \text{,K}_{eq} = \text{10}^{-11.865} \space \text{(reaction 5)}$
-**Muscovite to Gibbsite**
-$\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ 3\text{H}_4\text{SiO}_4 \space \text{,K}_{eq} = \text{10}^{-9.97} \space \text{(reaction 6)}$
+## Background information
+Mineral stability diagrams illustrate which minerals are thermodynamically stable given specific water chemistry conditions. When a _primary mineral_, which is often igneous or metamorphic, comes into contact with a water with which it is not in thermodynamic equilibrium, it reacts (_weathers_) into a _secondary mineral_ product.
 
-**Question 1**: Using these equations and the Keq provided, write out the equations that will make up the mineral phase diagram. Remember that the lines are in the general linear form Y = mX + b. The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. Turn these equations in along with your work. *It is very helpful to remember your log rules when solving these equations. There is a Exponent and Logarithm Rule Cheat Sheet in the repository for your reference.* 
+In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as the igneous _primary mineral_ microcline (a form of potassium feldspar) reacts with a typical, mildly acidic soil water. Weathering is a ubiquitous process on Earth's surface that is of fundamental importance due to its impact on the aqueous chemistry and mineralogy, as we will observe.
 
-Now that you have successfully derived the equations necessary for the mineral phase diagram, we will use Rstudio to build the mineral phase diagram. You can absolutely build a phase diagram by hand. However, the following Rmarkdown will walk you through how to use a phase diagram to determine how water chemistry changes as a mineral weathers. 
+By the way, R markdown documents use a productive notebook interface to weave together narrative text and code to produce elegantly formatted output. Plus, they are fully reproducible. All the cool kids are using them!
 
-Our calculations are adapted from the model of Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197), which were based the following assumptions:
+Before diving into the chemistry, let's visualize the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system.
 
-1. The system is closed and the water/rock ratio is small. This is akin to having almost an infinite amount of rock that is able to be weathered.
-2. The secondary minerals are in equilibrium with ions in the solution even though the primary minerals are not in equilibrium.
-3. Temperature and pressure are constant.
-4. Aluminum is conserved in the reactions.
-5. The solutions remain dilute such that all activity coefficients are close to unity.
+Woah, wait up... what are those weird money signs and brackets? That's using the $\TeX$ typesetting system to beautify equations and other science-y things. R markdown will format that when you 'knit' the document (more on that later), but for now, you can mouse over anything in money signs to display a rendered version. Try it!
 
+First, we need to load some packages. Packages contain functions that other smarty-pants wizards wrote. That's one great thing about R: no need to re-invent the wheel. Run this code chunk by pressing the green arrow in the right hand corner of the gray box below, or move your cursor into the chunk and press Ctrl+Alt+C (Windows) command+option+C (Mac).
 
 # Setup
 
@@ -66,8 +59,8 @@ opts_chunk$set(
   )
 ```
 
-# Mineral stability diagram K$_2$O - Al$_2$O$_3$ - SiO$_2$ - H$_2$O system
-The weathering reactions we will discuss are based on varying water chemical compositions within the mineral stability diagram plotted below. This was built using the equations you derived in question 1.
+# Mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system
+Now, run the next chunk to generate the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system.
 
 ```{r fig.width=10, fig.height=10, warning=FALSE, error=FALSE}
 par(mfrow = c(2, 2))
@@ -87,6 +80,106 @@ legend("bottomleft", describe.property(c("T", "P"), c(25, 1)), bty = "n")
 ```
 
 
+
+The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium.
+
+The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$.  The Y-axis can have different cations depending on the mineral system of interest.
+You should have already derived all the weathering reactions that are relevant for the phase diagram we are building. For your reference, they are listed below. The equations are written in LaTeX format. Mouse over the equation to read it more easily.
+
+
+**Gibbsite to Kaolinite**
+$2\text{Al}\text{(OH)}_3 + 2\text{H}_4\text{SiO}_4 \leftrightharpoons \text{Al}_3\text{Si}_2\text{O}_5\text{(OH)}_4 + 5\text{H}_2\text{O} \space  \text {,K}_{eq} \text= \text{10}^{9.35} \space \text{(reaction 2)}$
+**K-feldspar to Kaolinite**
+$2\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 9\text{H}_2\text{O} \leftrightharpoons  \text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2\text{K}^+ + 4\text{H}_{4}\text{SiO}_{4} \space \text {,K}_{eq} \text {=} \text {10}^{-5.21} \space \text{(reaction 3)}$
+**Muscovite to Kaolinite**
+$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+ \space \text{,K}_{eq} = \text{10}^{8.11} \space \text{(reaction 4)}$
+**K-feldspar to Muscovite**
+$3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4}\space \text{,K}_{eq} = \text{10}^{-11.865} \space \text{(reaction 5)}$
+**Muscovite to Gibbsite**
+$\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ 3\text{H}_4\text{SiO}_4 \space \text{,K}_{eq} = \text{10}^{-9.97} \space \text{(reaction 6)}$
+
+**Question 1**: Using these equations and the Keq provided, write out the equations that will make up the mineral phase diagram. Remember that the lines are in the general linear form Y = mX + b. The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. Turn these equations in along with your work. *It is very helpful to remember your log rules when solving these equations. There is a Exponent and Logarithm Rule Cheat Sheet in the repository for your reference.*
+
+Now that you have successfully derived the equations necessary for the mineral phase diagram, we will use Rstudio to build the mineral phase diagram. You can absolutely build a phase diagram by hand. However, the following Rmarkdown will walk you through how to use a phase diagram to determine how water chemistry changes as a mineral weathers.
+
+Our calculations are adapted from the model of Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197), which were based the following assumptions:
+
+1. The system is closed and the water/rock ratio is small. This is akin to having almost an infinite amount of rock that is able to be weathered.
+2. The secondary minerals are in equilibrium with ions in the solution even though the primary minerals are not in equilibrium.
+3. Temperature and pressure are constant.
+4. Aluminum is conserved in the reactions.
+5. The solutions remain dilute such that all activity coefficients are close to unity.
+```{r fig.height=6, fig.width=6}
+plot_stability_blank <- ggplot()+
+  #geom_point() +
+  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_blank
+```
+
+test segment plot
+```{r fig.height=4, fig.width=4}
+plot_stability_segment <- ggplot()+
+  geom_vline(xintercept = -4.68) +
+  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_linedraw()+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_segment
+```
+
+test segment plot 2
+```{r fig.height=4, fig.width=4}
+plot_stability_segment2 <- ggplot()+
+  geom_vline(xintercept = -4.68) +
+  geom_abline(intercept = -9.97, slope = -3) +
+  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_segment2
+```
+
+
+```{r}
+gibbs_intersect_KH <- -3*-4.68-9.97
+gibbs_intersect_KH
+```
+
+test segment plot 3
+```{r fig.height=4, fig.width=4}
+plot_stability_segment3 <- ggplot()+
+  geom_segment(aes(x = -4.68, y = gibbs_intersect_KH, xend = -4.68, yend = -3))+
+  geom_segment(aes(x = -4.68, y = gibbs_intersect_KH, xend = -5.323333, yend = 6))+
+  #geom_vline(xintercept = -4.68) +
+  #geom_abline(intercept = -9.97, slope = -3) +
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  #scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
+  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
+  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
+
+plot_stability_segment3
+```
+
 # Reaction 1: K feldspar weathering to gibbsite
 
 We are going to start with the single mineral microcline in typical acidic soil water.
@@ -95,12 +188,12 @@ $[K^{+}] = 1e^{-4}]$
 $pH = 4$
 Remember that $ pH = -log[H^{+}]$.
 
-When plotting the initial water chemistry point, you should notice that it sits within the gibbsite field. This indicates that microcline (K-feldspar) is NOT stable in this water chemistry. 
+When plotting the initial water chemistry point, you should notice that it sits within the gibbsite field. This indicates that microcline (K-feldspar) is NOT stable in this water chemistry.
 
 The next question is now which weathering reaction should we use for this initial step? Well, we know that we have K-feldspar and that our water chemistry is in the gibbsite field. So, the weathering reaction we use first will be K-feldspar to Gibbsite. The following R code chunks will walk you though how this calculatin was done. While it is good to know how to do this by hand, it is easier to see the evolution using a computer to calculate each step.
 
 **K-feldspar to Gibbsite**
-$\text{KAlSi}_3\text{O}_8 + \text{H}^+ + 7\text{H}_2\text{O} \leftrightharpoons \text{Al(OH)}_3 + \text{K}^+ + 3\text{H}_4\text{SiO}_4  \space \text{(reaction 1)}$ 
+$\text{KAlSi}_3\text{O}_8 + \text{H}^+ + 7\text{H}_2\text{O} \leftrightharpoons \text{Al(OH)}_3 + \text{K}^+ + 3\text{H}_4\text{SiO}_4  \space \text{(reaction 1)}$
 
 **Question 2** Why did we not derive a phase diagram boundary line for the K-feldspar to Gibbsite reaction?
 
@@ -109,7 +202,7 @@ $\text{KAlSi}_3\text{O}_8 + \text{H}^+ + 7\text{H}_2\text{O} \leftrightharpoons 
 mol_gibbs_A <- 0 # moles gibbsite at t0
 mol_l_H_A <- 1e-4 #### ENTER PROTON CONCENTRATION OF A TYPICAL ACIDIC SOIL, pH =4  # moles per liter H+ t0
 mol_l_K_A <- 1e-6 # moles per liter K+ t0
-mol_l_H4SiO4_A <- 1e-6 # moles per liter H4SiO4 t0 
+mol_l_H4SiO4_A <- 1e-6 # moles per liter H4SiO4 t0
 mol_kaol_A <- 0 # moles kaolinite t0
 mol_musc_A <- 0 # moles muscovite t0
 
@@ -141,10 +234,10 @@ k_spar_to_gibbs <- k_spar_to_gibbs %>% mutate(mol_l_H = mol_l_H_A + co_H_1 * ste
 Plot evolution of water chemistry during k feldspar weathering to gibbsite
 ```{r fig.height=6, fig.width=6}
 plot_k_spar_to_gibbs <- k_spar_to_gibbs %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color = steps))+
-  geom_point() +
+  geom_line(size=2, alpha =1) +
   scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
-  scale_color_continuous(name = TeX("rxn progress, $\\xi$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
   annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
   annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
@@ -416,9 +509,9 @@ ggplotly(plot_reactions_1_2_3_4)
 Plot accumulation of minerals with reaction progress *as stacked bar plot*
 ```{r fig.height=6, fig.width=6}
 # To make this plot faster, I selected every tenth data point and increased the width of the bars to fill in the gaps.
-plot_minerals_rxns_1_2_3_4_stacked <- reactions_1_2_3_4 %>% 
+plot_minerals_rxns_1_2_3_4_stacked <- reactions_1_2_3_4 %>%
   dplyr::slice(seq(1, n(), by = 10)) %>% # default "slice" is from CHNOSZ package
-  gather(key = "phase", value = "moles", starts_with("mol_")) %>% 
+  gather(key = "phase", value = "moles", starts_with("mol_")) %>%
   ggplot() +
   aes(x = steps, y = moles, fill = phase) +
   geom_bar(stat = "identity", position = "fill", width = 1)
@@ -444,14 +537,14 @@ Issues:
 + Bar plot is weirdly blinking?
 ```{r}
 
-plot_reactions_1_2_3_4_anim <- reactions_1_2_3_4 %>% 
+plot_reactions_1_2_3_4_anim <- reactions_1_2_3_4 %>%
   dplyr::slice(seq(1, n(), by = 100)) %>% # select only every 100th point. Default "slice" is from CHNOSZ package
-  arrange(log_H4SiO4) %>% 
-  plot_ly() %>% 
-  add_trace(x = ~log_H4SiO4, 
-            y = ~log_K_H_ratio, 
-            mode = "lines+markers", 
-            marker = list(color = "black"), 
+  arrange(log_H4SiO4) %>%
+  plot_ly() %>%
+  add_trace(x = ~log_H4SiO4,
+            y = ~log_K_H_ratio,
+            mode = "lines+markers",
+            marker = list(color = "black"),
             line = list(color = "black")) %>%
   add_trace(x = ~log_H4SiO4, y = ~log_K_H_ratio, frame = ~steps, marker = list(color = "red")) %>%
   layout(title = "Concentrations",
@@ -459,14 +552,14 @@ plot_reactions_1_2_3_4_anim <- reactions_1_2_3_4 %>%
          yaxis = list(title = "-log_x", range = c(-3, 5)))
 
 
-plot_minerals_rxns_1_2_3_4_anim <- reactions_1_2_3_4 %>% 
+plot_minerals_rxns_1_2_3_4_anim <- reactions_1_2_3_4 %>%
   dplyr::slice(seq(1, n(), by = 100)) %>% # select only every 100th point. Default "slice" is from CHNOSZ package
-  gather(key = "phase", value = "moles", starts_with("mol_")) %>% 
+  gather(key = "phase", value = "moles", starts_with("mol_")) %>%
   plot_ly() %>%
-  add_trace(x = ~phase, 
-            y = ~moles, 
-            type = 'bar', 
-            frame = ~steps, 
+  add_trace(x = ~phase,
+            y = ~moles,
+            type = 'bar',
+            frame = ~steps,
             color = ~phase) %>%
   layout(title = "Concentrations",
          xaxis = list(title = "Phase"),
@@ -474,7 +567,7 @@ plot_minerals_rxns_1_2_3_4_anim <- reactions_1_2_3_4 %>%
 
 
 
-subplot(plot_reactions_1_2_3_4_anim, plot_minerals_rxns_1_2_3_4_anim, nrows = 2) %>% 
+subplot(plot_reactions_1_2_3_4_anim, plot_minerals_rxns_1_2_3_4_anim, nrows = 2) %>%
   animation_opts(500, transition = 0, redraw = TRUE)
 ```
 
@@ -496,16 +589,16 @@ accumulate_by <- function(dat, var) {
   })
   dplyr::bind_rows(dats)
 }
-# 
-# p <- reactions_1_2_3_4 %>% 
+#
+# p <- reactions_1_2_3_4 %>%
 #   dplyr::slice(seq(1, n(), by = 100)) %>% # default "slice" is from CHNOSZ package
-#   gather(key = "phase", value = "moles", starts_with("mol_")) %>% 
+#   gather(key = "phase", value = "moles", starts_with("mol_")) %>%
 #   plot_ly() %>%
 #   add_trace(x = ~phase, y = ~moles, type = 'bar', frame = ~steps, color = ~phase) %>%
 #   layout(title = "Concentrations",
 #          xaxis = list(title = "Phase"),
 #          yaxis = list(title = "Moles", range = c(0, 10^-4)))
-# 
+#
 r <- reactions_1_2_3_4 %>%
   dplyr::slice(seq(1, n(), by = 100)) %>% # default "slice" is from CHNOSZ package
   arrange(log_H4SiO4) %>%
@@ -529,12 +622,12 @@ JHR - Plot accumulation of minerals with reaction progress as bar plot using gga
 ```{r fig.height=6, fig.width=6}
 # # This is slow and glitchy and only outputs as a gif --> bad solution.
 # library(gganimate) # ggplotly can't animate bar plots yet :/
-# 
+#
 # reactions_1_2 %>% dplyr::slice(1:4)
-# 
-# plot_minerals_rxns_1_2_anim <- reactions_1_2 %>% 
+#
+# plot_minerals_rxns_1_2_anim <- reactions_1_2 %>%
 #   dplyr::slice(seq(1, n(), by = 100)) %>% # default "slice" is from CHNOSZ package
-#   gather(key = "phase", value = "moles", starts_with("mol_")) %>% 
+#   gather(key = "phase", value = "moles", starts_with("mol_")) %>%
 #   ggplot() +
 #   aes(x = phase, y = moles, fill = phase, frame = steps) +
 #   geom_bar(stat = "identity") +
@@ -544,11 +637,11 @@ JHR - Plot accumulation of minerals with reaction progress as bar plot using gga
 #     state_length = 0.1
 #   )
 #   
-# 
-# 
+#
+#
 # animate(plot_minerals_rxns_1_2_anim)
-# 
-# 
+#
+#
 #   
 #   ggplot()+
 #   geom_point(aes(x=steps, y=mol_musc, color = "moles muscovite"))+
@@ -557,7 +650,7 @@ JHR - Plot accumulation of minerals with reaction progress as bar plot using gga
 #   scale_y_continuous(name = "moles mineral in system")+
 #   scale_x_continuous(name = TeX("reaction progress, $\\xi$"))+
 #   theme_bw()
-# 
+#
 # ggplotly(plot_minerals_rxns_1_2_anim)
 ```
 
@@ -567,7 +660,7 @@ JHR - Plot accumulation of minerals with reaction progress as bar plot using gga
 
 JHR - Plot accumulation of minerals with reaction progress as area chart - not currently working
 ```{r fig.height=6, fig.width=6}
-# plot_minerals_rxns_1_2_3_4_area <- reactions_1_2_3_4 %>% 
+# plot_minerals_rxns_1_2_3_4_area <- reactions_1_2_3_4 %>%
 #   ggplot() +
 #   geom_area(aes(x=steps, y=mol_musc + mol_gibbs + mol_kaol, fill = "moles muscovite"))+
 #   geom_area(aes(x=steps, y=mol_gibbs + mol_kaol, fill = "moles gibbsite"))+
@@ -575,7 +668,6 @@ JHR - Plot accumulation of minerals with reaction progress as area chart - not c
 #   scale_y_continuous(name = "moles mineral in system")+
 #   scale_x_continuous(name = "reaction progress, $\\xi$")+
 #   theme_bw()
-# 
+#
 # ggplotly(plot_minerals_rxns_1_2_3_4_area)
 ```
-
