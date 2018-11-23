@@ -2,8 +2,7 @@
 title: "K Feldspar Weathering"
 output:
   html_document:
-    css: stylesheet.css
-    fig_caption: yes
+    css: stylesheet.css    fig_caption: yes
     number_sections: no
     toc: yes
     toc_float: true
@@ -26,11 +25,16 @@ The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-a
 You should have already derived all the weathering reactions that are relevant for the phase diagram we are building. For your reference, they are listed below. The equations are written in LaTeX format. Mouse over the equation to read it more easily. 
 
 
-$2 KAlSi_{3}O_{8} + 9 H_{2}O + 2 H^{+} \leftrightharpoons Al_{2}Si_{2}O_{5}(OH)_{4} + 2 K^{+} + 4H_{4}SiO_{4},    K_{eq} = 10^{-5.21}$ 
-$KAlSi_{3}O_{8} + H^{+} + 7H_{2}O \leftrightharpoons Al(OH)_{3} + 2K^{+} + 3H_{4}SiO_{4}. K_{eq} = $
-$KAlSi_{3}O_{8} + 2Al(OH)_{3} + H^{+}  \leftrightharpoons 1.5Al_{2}Si_{2}O_{5}(OH)_{4} + K^{+} + 0.5H_{2}O, K_{eq} = $
-$2KAlSi_{3}O_{8} + 2H^{+} + 9H_{2}O \leftrightharpoons Al_{2}Si_{2}O_{5}(OH)_{4} + 2K^{+} + 4H_{4}SiO_{4}, K_{eq} = $
-
+**Gibbsite to Kaolinite**
+$2\text{Al}\text{(OH)}_3 + 2\text{H}_4\text{SiO}_4 \leftrightharpoons \text{Al}_3\text{Si}_2\text{O}_5\text{(OH)}_4 + 5\text{H}_2\text{O} \space  \text {,K}_{eq} \text= \text{10}^{9.35} \space \text{(reaction 2)}$ 
+**K-feldspar to Kaolinite**
+$2\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 9\text{H}_2\text{O} \leftrightharpoons  \text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2\text{K}^+ + 4\text{H}_{4}\text{SiO}_{4} \space \text {,K}_{eq} \text {=} \text {10}^{-5.21} \space \text{(reaction 3)}$
+**Muscovite to Kaolinite**
+$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+ \space \text{,K}_{eq} = \text{10}^{8.11} \space \text{(reaction 4)}$
+**K-feldspar to Muscovite**
+$3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4}\space \text{,K}_{eq} = \text{10}^{-11.865} \space \text{(reaction 5)}$
+**Muscovite to Gibbsite**
+$\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ 3\text{H}_4\text{SiO}_4 \space \text{,K}_{eq} = \text{10}^{-9.97} \space \text{(reaction 6)}$
 
 **Question 1**: Using these equations and the Keq provided, write out the equations that will make up the mineral phase diagram. Remember that the lines are in the general linear form Y = mX + b. The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. Turn these equations in along with your work. *It is very helpful to remember your log rules when solving these equations. There is a Exponent and Logarithm Rule Cheat Sheet in the repository for your reference.* 
 
@@ -95,8 +99,11 @@ When plotting the initial water chemistry point, you should notice that it sits 
 
 The next question is now which weathering reaction should we use for this initial step? Well, we know that we have K-feldspar and that our water chemistry is in the gibbsite field. So, the weathering reaction we use first will be K-feldspar to Gibbsite. The following R code chunks will walk you though how this calculatin was done. While it is good to know how to do this by hand, it is easier to see the evolution using a computer to calculate each step.
 
-KAlSi$_3$O$_8$ + H$^+$ + 7H$_2$O $\leftrightharpoons$ Al(OH)$_3$ + 2K$^+$ + 3H$_4$SiO$_4$
- *this reaction isn't balanced... Ellie fix this*
+**K-feldspar to Gibbsite**
+$\text{KAlSi}_3\text{O}_8 + \text{H}^+ + 7\text{H}_2\text{O} \leftrightharpoons \text{Al(OH)}_3 + \text{K}^+ + 3\text{H}_4\text{SiO}_4  \space \text{(reaction 1)}$ 
+
+**Question 2** Why did we not derive a phase diagram boundary line for the K-feldspar to Gibbsite reaction?
+
 ```{r}
 #initial conditions are no secondary minerals (only primary mineral, microcline), and water chemistry of typical acidic soil
 mol_gibbs_A <- 0 # moles gibbsite at t0
@@ -144,9 +151,7 @@ plot_k_spar_to_gibbs <- k_spar_to_gibbs %>% ggplot(aes(x=log_H4SiO4, y = log_K_H
 
 plot_k_spar_to_gibbs
 ```
-**Question 2**: Look at the plot that was generated. Did pH increase or decrease? What about potassium? And silicic acid? Where did the potassium and silisic acid come from? What happened to the concentration of K-feldspar? What about Gibbsite?
-
-**Question 3**: Notice that as we are moving the water chemistry towards the K-feldspar field. However, we did not continue to react all of the K-feldspar into gibbsite. Why did we stop the reaction here?
+**Question 3*: Look at the plot that was generated. Did potassium increase or decrease? What about silicic acid? Where did the potassium and silisic acid come from? What happened to the concentration of Gibbsite?
 
 #  Reaction 2: K feldspar weathering, gibbsite converted to kaolinite
 
@@ -229,7 +234,7 @@ plot_minerals_rxns_1_2 <- reactions_1_2 %>% ggplot()+
 plot_minerals_rxns_1_2
 ```
 
-**Question 5** You have just plotted mineral abundance versus reaction progress. At what percent in the reaction does kaolinite start to form? Why is there an inverse relationship between kaolinite and gibbsite after this point? How does this relate to your phase diagram?
+**Question 4** You have just plotted mineral abundance versus reaction progress. Why is there an inverse relationship between kaolinite and gibbsite after this point? How does this relate to your phase diagram?
 
 # Reaction 3: K feldspar weathering to kaolinite
 
@@ -308,7 +313,7 @@ plot_minerals_rxns_1_2_3 <- reactions_1_2_3 %>% ggplot()+
 plot_minerals_rxns_1_2_3
 ```
 
-# Reaction 4: K feldspar weathering with conversion of kaolinite to muscovite, reaching equilibrium between all 3 minerals
+# Reaction 5: K feldspar weathering with conversion of kaolinite to muscovite, reaching equilibrium between all 3 minerals
 
 
 
@@ -574,4 +579,3 @@ JHR - Plot accumulation of minerals with reaction progress as area chart - not c
 # ggplotly(plot_minerals_rxns_1_2_3_4_area)
 ```
 
-##STUDENT QUESTION: Using the same phase diagram, draw out the pathway you expect the water chemistry to take if we start with _____ and _____. Draw this on your phase diagram given to you in class and turn it in. 
