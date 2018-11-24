@@ -108,7 +108,7 @@ $3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpo
 **Microcline - Kaolinite**
 $2\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 9\text{H}_2\text{O} \leftrightharpoons  \text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2\text{K}^+ + 4\text{H}_{4}\text{SiO}_{4} \space K =\text {10}^{-5.21} \space \text{(reaction 5)}$
 
-We can relate these equations to their equilibrium constants through the law of mass action, i.e. for reaction 1:
+We can relate these equations to their equilibrium constants through the law of mass action, i.e. for Kaolinite - Gibbsite (reaction 1):
 
 $\left[\text{H}_4\text{SiO}_4\right]^2=10^{-9.35}$ (recall that solids and water have activity of 1 and thus cancel)
 
@@ -116,11 +116,11 @@ How could we visualize this? Not that the right side of the equation contains $1
 
 $\log\left[\text{H}_4\text{SiO}_4\right]=-4.675$
 
-Now, we can plot the above equation as a vertical line with $\log\left[\text{H}_4\text{SiO}_4\right]$ on the x axis. Run the code chunk below to see this line plotted. Note: we're using the ggplot2 package for plotting here, and using the geom_vline() function to plot a vertical line. You can see in the code that we've written in the x intercept of -4.675.
+Now, we can plot the above equation as a vertical line with $\log\left[\text{H}_4\text{SiO}_4\right]$ on the X axis. Run the code chunk below to see this line plotted. Note: we're using the ggplot2 package for plotting here, and using the geom_vline() function to plot a vertical line. You can see in the code that we've written in the X intercept of -4.675. We'll be using comments (un-executed code) with a #hashtag symbol to guide you through the relevant pieces of code.
 
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment <- ggplot()+
-  geom_vline(xintercept = -4.675) +
+  geom_vline(xintercept = -4.675) + # add vertical line for gibbsite - kaolinite equilibrium
   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
@@ -133,7 +133,84 @@ plot_stability_segment
 
 As we can now see, plotting in log coordinates has allowed us to visualize equilibrium equations as straight lines. We are well on our way to completing a mineral stability diagram!
 
-Now let's see what happens if we try to add another equilibrium line to the diagram.
+Now let's see what happens if we try to add another equilibrium line to the diagram. This time, we'll use the Muscovite - Gibbsite equilibrium (reaction 2 from above)
+
+$\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ + 3\text{H}_4\text{SiO}_4, K = \text{10}^{-9.97}$
+
+Relating concentrations to the equilibrium constant with the Law of Mass Action:
+$\frac{\left[\text{H}_4\text{SiO}_4\right]^3\left[\text{H}^+\right]}{\left[\text{K}^+\right]}=10^{-9.97}$
+
+Taking log of both sides:
+$3\log\left[\text{H}_4\text{SiO}_4\right]+\log\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=-9.97$
+
+Rearranging:
+$\log\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=-3\log\left[\text{H}_4\text{SiO}_4\right]-9.97$
+
+The above expression is the equation for a straight line in the form Y=mX+b on a plot of $\log\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}$ vs. $\log\left[\text{H}_4\text{SiO}_4\right]$
+
+We can add this line to our mineral stability plot using the geom_abline() function, which takes the slope and Y-intercept of a line as arguments. See and run the code chunk below.
+```{r fig.height=4, fig.width=4}
+plot_stability_segment2 <- ggplot()+
+  geom_vline(xintercept = -4.68) +
+  geom_abline(intercept = -9.97, slope = -3) + # add straight line in slope-intercept form for muscovite gibbsite equilibrium
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))
+
+plot_stability_segment2
+```
+
+Cool, it's starting to look like a mineral stability diagram, but as you can see, the lines intersect. How do we deal with this? First, let's annotate the text "gibbsite" in its stability field, just like in the plot we made with the CHNOSZ package. We can do this using the annotate() function. We just tell it what we want to annotate (text), the X and Y coordinates, of our annotation, as well as what should be on the label (gibbsite), and the size of the letters (4). See and run the chunk.
+
+```{r fig.height=4, fig.width=4}
+plot_stability_segment3 <- ggplot()+
+  geom_vline(xintercept = -4.68) +
+  geom_abline(intercept = -9.97, slope = -3) +
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
+  annotate("text", y = 4, x=-5.4, label = "gibbsite", size = 4)
+
+plot_stability_segment3
+```
+
+**Question 2** How you could infer which of the areas on the above plot is the stability field for gibbsite using Le Châtelier's Principle? Explain.
+**Answer 2** since gibbsite is a hydoxide (compared to the other minerals in the diagram, which are silicates), it is consistent with Le Châtelier's Principle that gibbsite would be the stable mineral at the lowest $\left[\text{H}_4\text{SiO}_4\right]$.
+
+Since gibbsite is only stable in one region on this plot, we must remove the excess lines, which are meaningless. To do this, we must first solve for the point at which these two lines intersect. The X coordinate of the point of intersection will be -4.68, which we take for the equation of a vertical line that we derived for the Kaolinite - Gibbsite equilibrium. We can then simply plug in that X value to the equilibrium line we derived for the Muscovite - Gibbsite equilibrium. Run the chunk below to plug calculate the Y coordinate of the point of intersection.
+
+```{r}
+gibbsite_intersect_KH <- -3*-4.68-9.97 # solve for Y coordinate of the two intersecting equilibrium lines and assign it to a numeric value
+gibbsite_intersect_KH # print that value
+```
+
+Now, we can use the geom_segment() function to plot two line segments that define the borders of the gibbsite stability field. The geom_segment() function takes two XY coordinate points as arguments, and draws a line through them. In our case, the lines hit the edges of the region we have chosen to display on our plot. For the vertical line, it is simple to infer where it hits the edge, but for the sloped line, we must solve for it.
+
+```{r}
+gibbsite_musc_edge_H4SiO4 <- -(6+9.97)/3 # solve for X coordinate where gibbsite-muscovite equilibrium line exits the plot and assign it to a numeric value
+gibbsite_musc_edge_H4SiO4  # print that value
+```
+
+test segment plot 3
+```{r fig.height=4, fig.width=4}
+plot_stability_segment4 <- ggplot()+
+  geom_segment(aes(x = -4.68, y = gibbsite_intersect_KH, xend = -4.68, yend = -3))+ # gibbsite - kaolinite equilibrium line
+  geom_segment(aes(x = -4.68, y = gibbsite_intersect_KH, xend = gibbsite_musc_edge_H4SiO4, yend = 6))+ # gibbsite - muscovite equilibrium line
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
+ annotate("text", y = 4, x=-5.4, label = "gibbsite", size = 4)
+
+plot_stability_segment4
+```
 
 
 
@@ -152,64 +229,15 @@ Our calculations are adapted from the model of Steinmann et al., 1994 (http://cc
 3. Temperature and pressure are constant.
 4. Aluminum is conserved in the reactions.
 5. The solutions remain dilute such that all activity coefficients are close to unity.
-```{r fig.height=6, fig.width=6}
-plot_stability_blank <- ggplot()+
-  #geom_point() +
-  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
-  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
-  theme_bw()+
- theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
-  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
-  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
 
-plot_stability_blank
-```
 
 test segment plot
 
 
-test segment plot 2
-```{r fig.height=4, fig.width=4}
-plot_stability_segment2 <- ggplot()+
-  geom_vline(xintercept = -4.68) +
-  geom_abline(intercept = -9.97, slope = -3) +
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
-  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
-  theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
- theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
-  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
-  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
-
-plot_stability_segment2
-```
 
 
-```{r}
-gibbs_intersect_KH <- -3*-4.68-9.97
-gibbs_intersect_KH
-```
 
-test segment plot 3
-```{r fig.height=4, fig.width=4}
-plot_stability_segment3 <- ggplot()+
-  geom_segment(aes(x = -4.68, y = gibbs_intersect_KH, xend = -4.68, yend = -3))+
-  geom_segment(aes(x = -4.68, y = gibbs_intersect_KH, xend = -5.323333, yend = 6))+
-  #geom_vline(xintercept = -4.68) +
-  #geom_abline(intercept = -9.97, slope = -3) +
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
-  #scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
-  theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
- theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
-  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
-  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
 
-plot_stability_segment3
-```
 
 # Reaction 1: K feldspar weathering to gibbsite
 
