@@ -24,7 +24,7 @@ date: "`r Sys.Date()`"
 
 ## Conceptual prerequisites
 * familiarity with mineral stability diagrams
-* using log rules to linearize equilibria
+* using log rules to linearize equilibrium equations
 * plotting in log space
 
 ## Learning goals
@@ -33,17 +33,19 @@ date: "`r Sys.Date()`"
 * connect groundwater chemistry to mineral assemblages
 
 ## Background information
-Mineral stability diagrams illustrate which minerals are thermodynamically stable given specific water chemistry conditions. When a _primary mineral_, which is often igneous or metamorphic, comes into contact with a water with which it is not in thermodynamic equilibrium, it reacts (_weathers_) into a _secondary mineral_ product.
+A mineral stability diagram shows the boundaries between the thermodynamic stability regions of different minerals (i.e., where the mineral begins to precipitate) as a function of two or more master variables, often the activities or activity ratios of the major controlling species present (Kinniburgh and Cooper, 2004 https://pubs.acs.org/doi/pdf/10.1021/es034927l)
 
-In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as the igneous _primary mineral_ microcline (a form of potassium feldspar) reacts with a typical, mildly acidic soil water. Weathering is a ubiquitous process on Earth's surface that is of fundamental importance due to its impact on the aqueous chemistry and mineralogy, as we will observe.
+One application of mineral stability diagrams is to trace how _primary minerals_, which are often igneous or metamorphic, react _(weather)_ into _secondary mineral_ products when primary minerals contact water with which they are not in thermodynamic equilibrium.
 
-By the way, R markdown documents use a productive notebook interface to weave together narrative text and code to produce elegantly formatted output. Plus, they are fully reproducible. All the cool kids are using them!
+In this R markdown file, we calculate and visualize changes in water chemistry and secondary mineral assemblages as the common igneous primary mineral microcline (a form of potassium feldspar) reacts with a typical, mildly acidic soil water. Chemical weathering is a ubiquitous process on Earth's surface that is of fundamental importance due to its impact on the aqueous chemistry and mineralogy, as we will observe.
+
+By the way, R markdown documents use a notebook interface to weave together narrative text and code to produce elegantly formatted output. Plus, they are fully reproducible. All the cool kids are using them!
 
 Before diving into the chemistry, let's visualize the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system.
 
-Woah, wait up... what are those weird money signs and brackets? That's using the $\TeX$ typesetting system to beautify equations and other science-y things. R markdown will format that when you 'knit' the document (more on that later), but for now, you can mouse over anything in money signs to display a rendered version. Try it!
+Woah, wait up... what are those weird money signs and brackets about? That's the $\TeX$ typesetting system, which is used to beautify equations and other science-y text. R markdown will format that when you 'knit' the document (more on that later), but for now, you can mouse over anything in money signs to display a rendered version. Try it!
 
-First, we need to load some packages. Packages contain functions that other smarty-pants wizards wrote. That's one great thing about R: no need to re-invent the wheel. Run this code chunk by pressing the green arrow in the right hand corner of the gray box below, or move your cursor into the chunk and press Ctrl+Alt+C (Windows) command+option+C (Mac).
+First, we need to load some packages. Packages contain functions that other smarty-pants wizards wrote. That's one great thing about R: no need to re-invent the wheel. Run this code chunk by pressing the green arrow in the right hand corner of the gray box below, or move your cursor into the chunk and press Ctrl+Alt+C (Windows) or command+option+C (Mac).
 
 # Setup
 
@@ -63,9 +65,9 @@ opts_chunk$set(
 ```
 
 # Mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system
-Now, run the next chunk to generate the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system.
+The R package 'CHNOSZ' contains a speciation function, which calculates the distribution of chemical species based on their thermodynamic characteristics, which are stored in a large database contained in the package. To generate the mineral stability diagram for the $\text{K}_2\text{O} - \text{Al}_2\text{O}_3 - \text{SiO}_2 - \text{H}_2\text{O}$ system at T = 25˚C and P = 1 bar using the CHNOSZ package, run the chunk below.
 
-```{r fig.width=10, fig.height=10, warning=FALSE, error=FALSE}
+```{r fig.width=10, fig.height=10, warning=FALSE, error=FALSE, message=FALSE}
 par(mfrow = c(2, 2))
 res <- 200
 fill <- "terrain"
@@ -74,32 +76,70 @@ fill <- "terrain"
 ## Steinmann et al., 1994 (http://ccm.geoscienceworld.org/content/42/2/197)
 ## Garrels and Christ, p. 361 (http://www.worldcat.org/oclc/517586)
 ## https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-75.html
-basis(c("Al+3", "pseudo-H4SiO4", "K+", "H2O", "H+", "O2"))
-species(c("gibbsite", "muscovite", "kaolinite", "pyrophyllite", "K-feldspar"))
+basis <- basis(c("Al+3", "pseudo-H4SiO4", "K+", "H2O", "H+", "O2"))
+species <- species(c("gibbsite", "muscovite", "kaolinite", "pyrophyllite", "K-feldspar"))
 a <- affinity(H4SiO4 = c(-6, -2, res), `K+` = c(-3, 6, res))
 diagram(a, ylab = ratlab("K+"), fill = fill, yline = 1.7)
 title(main = syslab(c("K2O", "Al2O3", "SiO2", "H2O")))
 legend("bottomleft", describe.property(c("T", "P"), c(25, 1)), bty = "n")
 ```
 
+Wow, we just pressed 2 buttons and made a lot of science happen! But what is the above diagram telling us? The x-axis of the diagram is $\text{log}[\text{H}_{4}\text{SiO}_{4}]$, which is silicic acid. The Y-axis is $\text{log}\frac {[\text{K}^{+}]}{[\text{H}^{+}]}$. These species were chosen because they control the stability of the minerals in this sytem, but different species could be plotted depending on the system of interest. Soon, we will see why the log concentrations are plotted. This diagram shows the stable mineral at a wide range of water chemistry conditions.
+
+**Question 1** What is the stable mineral under the following conditions: $\text{log}[\text{H}_{4}\text{SiO}_{4}]=-3$, $\text{log}\frac {[\text{K}^{+}]}{[\text{H}^{+}]}=0$, T = 25˚C and P = 1 bar?
+**Answer 1** pyrophyllite
+
+Now that you can visualize and interpret a mineral stability diagram, let's investigate how it is actually created.
+
+You should have already derived in class all the equilibria that are relevant to the system we've been discussing. For your reference, the equations and equilibrium constants, $K$ at 25˚C are provided below.
+
+**Kaolinite - Gibbsite**
+$\text{Al}_3\text{Si}_2\text{O}_5\text{(OH)}_4 + 5\text{H}_2\text{O}  \leftrightharpoons 2\text{Al}\text{(OH)}_3 + 2\text{H}_4\text{SiO}_4, \space  K =10^{-9.35} \space \text{(reaction 1)}$
+
+**Muscovite - Gibbsite**
+$\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ + 3\text{H}_4\text{SiO}_4, K = \text{10}^{-9.97} \space \text{(reaction 2)}$
+
+**Muscovite - Kaolinite**
+$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+, \space K = 10^{8.11} \space \text{(reaction 3)}$
+
+**Microcline - Muscovite**
+$3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4},\space K = 10^{-11.865} \space \text{(reaction 4)}$
+
+**Microcline - Kaolinite**
+$2\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 9\text{H}_2\text{O} \leftrightharpoons  \text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2\text{K}^+ + 4\text{H}_{4}\text{SiO}_{4} \space K =\text {10}^{-5.21} \space \text{(reaction 5)}$
+
+We can relate these equations to their equilibrium constants through the law of mass action, i.e. for reaction 1:
+
+$\left[\text{H}_4\text{SiO}_4\right]^2=10^{-9.35}$ (recall that solids and water have activity of 1 and thus cancel)
+
+How could we visualize this? Not that the right side of the equation contains $10^{-9.35}$. Thus if we apply our exponent and log rules, and take the $\log_{10}$ of both sides, we can rearrange the above equation to:
+
+$\log\left[\text{H}_4\text{SiO}_4\right]=-4.675$
+
+Now, we can plot the above equation as a vertical line with $\log\left[\text{H}_4\text{SiO}_4\right]$ on the x axis. Run the code chunk below to see this line plotted. Note: we're using the ggplot2 package for plotting here, and using the geom_vline() function to plot a vertical line. You can see in the code that we've written in the x intercept of -4.675.
+
+```{r fig.height=4, fig.width=4}
+plot_stability_segment <- ggplot()+
+  geom_vline(xintercept = -4.675) +
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))
+
+plot_stability_segment
+```
+
+As we can now see, plotting in log coordinates has allowed us to visualize equilibrium equations as straight lines. We are well on our way to completing a mineral stability diagram!
+
+Now let's see what happens if we try to add another equilibrium line to the diagram.
 
 
-The first step in using a mineral stability digram is making said mineral stability digram. The lines on the mineral stability digram describe regions where the two minerals are in equilibrium.
-
-The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$.  The Y-axis can have different cations depending on the mineral system of interest.
-You should have already derived all the weathering reactions that are relevant for the phase diagram we are building. For your reference, they are listed below. The equations are written in LaTeX format. Mouse over the equation to read it more easily.
 
 
-**Gibbsite to Kaolinite**
-$2\text{Al}\text{(OH)}_3 + 2\text{H}_4\text{SiO}_4 \leftrightharpoons \text{Al}_3\text{Si}_2\text{O}_5\text{(OH)}_4 + 5\text{H}_2\text{O} \space  \text {,K}_{eq} \text= \text{10}^{9.35} \space \text{(reaction 2)}$
-**K-feldspar to Kaolinite**
-$2\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 9\text{H}_2\text{O} \leftrightharpoons  \text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2\text{K}^+ + 4\text{H}_{4}\text{SiO}_{4} \space \text {,K}_{eq} \text {=} \text {10}^{-5.21} \space \text{(reaction 3)}$
-**Muscovite to Kaolinite**
-$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+ \space \text{,K}_{eq} = \text{10}^{8.11} \space \text{(reaction 4)}$
-**K-feldspar to Muscovite**
-$3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4}\space \text{,K}_{eq} = \text{10}^{-11.865} \space \text{(reaction 5)}$
-**Muscovite to Gibbsite**
-$\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ 3\text{H}_4\text{SiO}_4 \space \text{,K}_{eq} = \text{10}^{-9.97} \space \text{(reaction 6)}$
+
+The lines on the mineral stability digram describe regions where the two minerals are in equilibrium.
 
 **Question 1**: Using these equations and the Keq provided, write out the equations that will make up the mineral phase diagram. Remember that the lines are in the general linear form Y = mX + b. The x-axis of the diagram is $log[H_{4}SiO_{4}]$, which is silicic acid. The Y-axis in this case will be $log \frac {[K^{+}]}{[H^{+}]}$. Turn these equations in along with your work. *It is very helpful to remember your log rules when solving these equations. There is a Exponent and Logarithm Rule Cheat Sheet in the repository for your reference.*
 
@@ -127,27 +167,15 @@ plot_stability_blank
 ```
 
 test segment plot
-```{r fig.height=4, fig.width=4}
-plot_stability_segment <- ggplot()+
-  geom_vline(xintercept = -4.68) +
-  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
-  scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
-  theme_linedraw()+
- theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))#+
-  #annotate("text", y = -2.4, x=-6, label = "A", size = 6)+
-  #annotate("text", y = -1.1, x=-4.2, label = "B", size = 6)
 
-plot_stability_segment
-```
 
 test segment plot 2
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment2 <- ggplot()+
   geom_vline(xintercept = -4.68) +
   geom_abline(intercept = -9.97, slope = -3) +
-  scale_x_continuous(limits = c(-6, -2), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
