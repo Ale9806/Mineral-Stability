@@ -77,7 +77,7 @@ fill <- "terrain"
 ## Garrels and Christ, p. 361 (http://www.worldcat.org/oclc/517586)
 ## https://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/html/final-75.html
 basis <- basis(c("Al+3", "pseudo-H4SiO4", "K+", "H2O", "H+", "O2"))
-species <- species(c("gibbsite", "muscovite", "kaolinite", "pyrophyllite", "K-feldspar"))
+species <- species(c("gibbsite", "muscovite", "kaolinite", "K-feldspar"))
 a <- affinity(H4SiO4 = c(-6, -2, res), `K+` = c(-3, 6, res))
 diagram(a, ylab = ratlab("K+"), fill = fill, yline = 1.7)
 title(main = syslab(c("K2O", "Al2O3", "SiO2", "H2O")))
@@ -116,11 +116,17 @@ How could we visualize this? Not that the right side of the equation contains $1
 
 $\log\left[\text{H}_4\text{SiO}_4\right]=-4.675$
 
+Let's run the following chunk to assign our solution to a numeric value using "<-" so we can use it later
+```{r}
+gibb_intersect_H4SiO4 <- -4.675 # solve for Y coordinate of the two intersecting equilibrium lines and assign it to a numeric value
+gibb_intersect_H4SiO4 # print that value
+```
+
 Now, we can plot the above equation as a vertical line with $\log\left[\text{H}_4\text{SiO}_4\right]$ on the X axis. Run the code chunk below to see this line plotted. Note: we're using the ggplot2 package for plotting here, and using the geom_vline() function to plot a vertical line. You can see in the code that we've written in the X intercept of -4.675. We'll be using comments (un-executed code) with a #hashtag symbol to guide you through the relevant pieces of code.
 
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment <- ggplot()+
-  geom_vline(xintercept = -4.675) + # add vertical line for gibbsite - kaolinite equilibrium
+  geom_vline(xintercept = gibb_intersect_H4SiO4) + # add vertical line for gibbsite - kaolinite equilibrium
   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
@@ -151,7 +157,7 @@ The above expression is the equation for a straight line in the form Y=mX+b on a
 We can add this line to our mineral stability plot using the geom_abline() function, which takes the slope and Y-intercept of a line as arguments. See and run the code chunk below.
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment2 <- ggplot()+
-  geom_vline(xintercept = -4.68) +
+  geom_vline(xintercept = gibb_intersect_H4SiO4) +
   geom_abline(intercept = -9.97, slope = -3) + # add straight line in slope-intercept form for muscovite gibbsite equilibrium
   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
@@ -167,7 +173,7 @@ Cool, it's starting to look like a mineral stability diagram, but as you can see
 
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment3 <- ggplot()+
-  geom_vline(xintercept = -4.68) +
+  geom_vline(xintercept = gibb_intersect_H4SiO4) +
   geom_abline(intercept = -9.97, slope = -3) +
   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
@@ -185,23 +191,26 @@ plot_stability_segment3
 
 Since gibbsite is only stable in one region on this plot, we must remove the excess lines, which are meaningless. To do this, we must first solve for the point at which these two lines intersect. The X coordinate of the point of intersection will be -4.68, which we take for the equation of a vertical line that we derived for the Kaolinite - Gibbsite equilibrium. We can then simply plug in that X value to the equilibrium line we derived for the Muscovite - Gibbsite equilibrium. Run the chunk below to plug calculate the Y coordinate of the point of intersection.
 
+
 ```{r}
-gibbsite_intersect_KH <- -3*-4.68-9.97 # solve for Y coordinate of the two intersecting equilibrium lines and assign it to a numeric value
-gibbsite_intersect_KH # print that value
+gibb_intersect_KH <- -3*-4.68-9.97 # solve for Y coordinate of the two intersecting equilibrium lines and assign it to a numeric value
+gibb_intersect_KH # print that value
 ```
 
 Now, we can use the geom_segment() function to plot two line segments that define the borders of the gibbsite stability field. The geom_segment() function takes two XY coordinate points as arguments, and draws a line through them. In our case, the lines hit the edges of the region we have chosen to display on our plot. For the vertical line, it is simple to infer where it hits the edge, but for the sloped line, we must solve for it.
+
+
 
 ```{r}
 gibbsite_musc_edge_H4SiO4 <- -(6+9.97)/3 # solve for X coordinate where gibbsite-muscovite equilibrium line exits the plot and assign it to a numeric value
 gibbsite_musc_edge_H4SiO4  # print that value
 ```
 
-test segment plot 3
+
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment4 <- ggplot()+
-  geom_segment(aes(x = -4.68, y = gibbsite_intersect_KH, xend = -4.68, yend = -3))+ # gibbsite - kaolinite equilibrium line
-  geom_segment(aes(x = -4.68, y = gibbsite_intersect_KH, xend = gibbsite_musc_edge_H4SiO4, yend = 6))+ # gibbsite - muscovite equilibrium line
+  geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibbsite_intersect_KH, xend = gibb_intersect_H4SiO4, yend = -3))+ # gibbsite - kaolinite equilibrium line
+  geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibbsite_intersect_KH, xend = gibbsite_musc_edge_H4SiO4, yend = 6))+ # gibbsite - muscovite equilibrium line
   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
   theme_bw()+
@@ -212,8 +221,90 @@ plot_stability_segment4 <- ggplot()+
 plot_stability_segment4
 ```
 
+**Question 3** OK now it's your turn. Solve for the equilibrium lines for Muscovite - Kaolinite and Microcline - Muscovite, and then input the endpoints of segments in the chunk below to plot them. Please do your calculations on corresponding worksheet distributed to the class.  *In case you need a refresher, there is a Exponent and Logarithm Rule Cheat Sheet in the repository for your reference.*
+
+Muscovite - Kaolinite
+$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+, \space K = 10^{8.11} \space \text{(reaction 3)}$
+
+Microcline - Muscovite
+$3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4},\space K = 10^{-11.865} \space \text{(reaction 4)}$
+
+**Answer 3**
+
+Write expression for $K$ for Muscovite - Kaolinite with Law of Mass Action
+
+$\frac{\left[\text{K}^+\right]^2}{\left[\text{H}^+\right]^2}=10^{8.11}$
+
+Take square root
+
+$\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=10^{4.055}$
+
+Take log
+
+$\log\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=4.055$
 
 
+Write expression for $K$ for Microcline - Muscovite with Law of Mass Action
+
+$\frac{\left[\text{H}_{4}\text{SiO}_{4}\right]^6\left[\text{K}^+\right]^2}{\left[\text{H}^+\right]^2}=10^{-11.865}$
+
+Take square root
+
+$\frac{\left[\text{H}_{4}\text{SiO}_{4}\right]^3\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=10^{-5.9325}$
+
+Take log
+
+$3\log\left[\text{H}_{4}\text{SiO}_{4}\right]+\log\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=-5.9325$
+
+Rearrange as Y=mX+b
+$\log\frac{\left[\text{K}^+\right]}{\left[\text{H}^+\right]}=-3\log\left[\text{H}_{4}\text{SiO}_{4}\right]-5.9325$
+
+Find intersection of the Muscovite - Kaolinite and Microcline - Muscovite equilibrium lines. We already know the Y coordinate since Muscovite - Kaolinite equilibrium is a straight line. So let's solve for Y coordinate by plugging in.
+
+```{r}
+kaol_musc_micr_eq_point_KH <- 4.055 # students should assign the log K/H value for the equilibrium point between kaolinite muscovite and microcline here
+kaol_musc_micr_eq_point_KH
+```
+
+```{r}
+kaol_musc_micr_eq_point_H4SiO4 <- -(kaol_musc_micr_eq_point_KH + 5.9325) / 3 # students should assign the log H4SiO4 value  for the equilibrium point between kaolinite muscovite and microcline here
+kaol_musc_micr_eq_point_H4SiO4
+```
+
+```{r}
+musc_micr_edge_KH <- 6 # students should assign the log K/H value for where the microcline - muscovite equilibrium line intersects the edge of the plotted area here
+musc_micr_edge_KH
+```
+
+```{r}
+musc_micr_edge_H4SiO4 <- -(musc_micr_edge_KH + 5.9325) / 3 # students should assign the log K/H value for where the microcline - muscovite equilibrium line intersects the edge of the plotted area here
+musc_micr_edge_H4SiO4
+```
+
+[End answer 3]
+
+```{r}
+kaol_micr_edge_KH <- -2*-2-2.6 # The the microcline - kaolinite line is solved for you
+kaol_micr_edge_KH
+```
+Now, if you solved the equations and saved them to the appropriate variables, then running the following code chunk should generate a complete mineral stability diagram. It should look like the first figure you generated using the CHNOSZ package.
+
+```{r fig.height=4, fig.width=4}
+plot_stability_segment5 <- ggplot()+
+  geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibbsite_intersect_KH, xend = -4.68, yend = -3))+
+  geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibbsite_intersect_KH, xend = gibbsite_musc_edge_H4SiO4, yend = 6))+
+  geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibbsite_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH))+ # muscovite - kaolinite equilibrium line
+  geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH))+ #microcline - muscovite equilibrium line
+  geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH))+ #microcline - kaolinite equilibrium line
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+ theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
+ annotate("text", y = 4, x=-5.4, label = "gibbsite", size = 4)
+
+plot_stability_segment5
+```
 
 
 The lines on the mineral stability digram describe regions where the two minerals are in equilibrium.
