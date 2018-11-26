@@ -370,7 +370,7 @@ co_musc_1 <- 0
 
 #Make data frame of reaction steps
 
-steps <- seq(0, 100, by = 0.01) # make a sequence of reaction steps
+steps <- seq(0, 100, by = 0.001) # make a sequence of reaction steps
 
 k_spar_to_gibbs <- as.data.frame(steps) # convert sequence to a data frame
 
@@ -437,7 +437,7 @@ co_musc_2 <- 0##
 
 #Make data frame of reaction steps
 
-steps_2 <- seq(0, 100, by = 0.01)
+steps_2 <- seq(0, 100, by = 0.001)
 
 gibbs_to_kaol <- as.data.frame(steps_2)
 
@@ -533,7 +533,7 @@ co_musc_3 <- 0
 
 #Make data frame of reaction steps
 
-steps_3 <- seq(0, 100, by = 0.001)
+steps_3 <- seq(0, 100, by = 0.01)
 
 kspar_to_kaol <- as.data.frame(steps_3)
 
@@ -738,15 +738,39 @@ Plots together
 
 
 Animation of species concentrations changing with reaction progress
-Issues:
-+ Formatting - title and axes labels aren't showing up, TeX
-+ Bar plot is weirdly blinking?
+to do:
+  + Format (TeX slows it down too much...)
+    + Space between plots
+    + Legend formatting
+    + Title
+  + Fix steps to be more representative
+  + Add equivalent of geom_segments
+  + Seb's class example (plotly with markers instead of the bars) might allow things to render better?
 ```{r, warning=FALSE, message=FALSE}
+
+
+# plot_stability_segment5 <- ggplot()+
+#   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = -4.68, yend = -3))+
+#   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = gibb_musc_edge_H4SiO4, yend = 6))+
+#   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH))+ # muscovite - kaolinite equilibrium line
+#   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH))+ #microcline - muscovite equilibrium line
+#   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH))+ #microcline - kaolinite equilibrium line
+#   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
+#    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+#   theme_bw()+
+#   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+#  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
+#  annotate("text", y = 4, x= -5.4, label = "gibbsite", size = 4)+
+#  annotate("text", y = 5.5, x= -4.5, label = "muscovite", size = 4)+
+#  annotate("text", y = 5.5, x= -3, label = "microcline", size = 4)+
+#  annotate("text", y = -2, x= -3, label = "kaolinite", size = 4)
+
 
 plot_reactions_ABCDE_anim <- ABCDE %>%
   dplyr::slice(seq(from = 1, to = nrow(ABCDE), by = 100)) %>% # select only every 100th point. Default "slice" is from CHNOSZ package
   arrange(log_H4SiO4) %>%
   plot_ly() %>%
+#  add_segments(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = -4.68, yend = -3) %>% 
   add_trace(x = ~log_H4SiO4,
             y = ~log_K_H_ratio,
             mode = "lines+markers",
@@ -754,13 +778,12 @@ plot_reactions_ABCDE_anim <- ABCDE %>%
             line = list(color = "black")) %>%
   add_trace(x = ~log_H4SiO4, y = ~log_K_H_ratio, frame = ~steps, marker = list(color = "red")) %>%
   layout(title = "Concentrations",
-         xaxis = list(title = "Phase", range = c(-6, -3)),
-         yaxis = list(title = "-log_x", range = c(-3, 5)))
-
+         xaxis = list(title = "log[H4SiO4]", range = c(-6, -3)), # plotly::TeX("log \\left[H_4SiO_4\\right]")
+         yaxis = list(title = "log[K+/H+]", range = c(-3, 5))) # plotly::TeX("log \\left[ \\frac{K^+}{H^+} \\right]")
 
 plot_minerals_rxns_ABCDE_anim <- ABCDE %>%
   dplyr::slice(seq(from = 1, to = nrow(ABCDE), by = 100)) %>% # select only every 100th point. Default "slice" is from CHNOSZ package
-  gather(key = "phase", value = "moles", starts_with("mol_")) %>%
+  gather(key = "phase", value = "moles", mol_gibbs, mol_kaol, mol_musc) %>%
   plot_ly() %>%
   add_trace(x = ~phase,
             y = ~moles,
@@ -768,14 +791,125 @@ plot_minerals_rxns_ABCDE_anim <- ABCDE %>%
             frame = ~steps,
             color = ~phase) %>%
   layout(title = "Concentrations",
-         xaxis = list(title = "Phase"),
-         yaxis = list(title = "Moles", range = c(0, 2.3*10^-4)))
+         xaxis = list(title = "Reaction progress"), # plotly::TeX("\\text{reaction progress, } \\xi")
+         yaxis = list(title = "Moles mineral in system", range = c(0, 50*10^-6))) # plotly::TeX("\\text{moles mineral in system}"
 
 
 
-subplot(plot_reactions_ABCDE_anim, plot_minerals_rxns_ABCDE_anim, nrows = 2) %>%
-  animation_opts(frame = 200, transition = 0, redraw = TRUE)
+
+subplot(plot_reactions_ABCDE_anim, plot_minerals_rxns_ABCDE_anim, nrows = 1, titleX = T, titleY = T) %>%
+  animation_opts(frame = 200, transition = 0, redraw = TRUE) #%>%
+#  config(mathjax = 'cdn')
 ```
+
+
+Slicing this up better:
+
+```{r}
+ABCDE
+```
+
+
+
+
+ggplotly take 2.
+
+
+```{r}
+
+plot_minerals_ABCDE_test <- ABCDE %>%
+  dplyr::slice(seq(from = 1, to = nrow(ABCDE), by = 100)) %>% 
+  ggplot()+
+  geom_line(aes(x=steps, y=mol_musc, color = "moles muscovite"))+
+  geom_line(aes(x=steps, y=mol_gibbs, color = "moles gibbsite"))+
+  geom_line(aes(x=steps, y=mol_kaol, color = "moles kaolinite"))+
+  scale_y_continuous(name = "moles mineral in system")+
+  scale_x_continuous(name = plotly::TeX("reaction progress, $\\xi$"))+
+  theme_bw() %>%
+  config(mathjax = 'cdn')
+
+
+plot_minerals_ABCDE_test %>% ggplotly() %>%
+  layout(
+    xaxis = list(
+      title = plotly::TeX("\\text{reaction progress, } \\xi")),
+    yaxis = list(
+      title = plotly::TeX("\\text{moles mineral in system}"))) %>%
+  config(mathjax = 'cdn')
+
+
+
+ply <- plot_minerals_ABCDE_test %+% aes(frame = steps) %>% ggplotly() + layout(
+    xaxis = list(
+      title = plotly::TeX("\\text{reaction progress, } \\xi")),
+    yaxis = list(
+      title = plotly::TeX("\\text{moles mineral in system}"))) %>%
+  config(mathjax = 'cdn')
+```
+
+
+
+
+Now try ggplotly with the more complicated phase diagram:
+
+```{r}
+# # This mostly works, but R can't handle it.
+
+# plot_ABCDE_test <- ABCDE %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color = steps))+ # pass the dataframe to ggplot and tell it what to use for x and y
+#   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = -4.68, yend = -3), color = "black", size = 0.3)+
+#   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = gibb_musc_edge_H4SiO4, yend = 6), color = "black", size = 0.3)+
+#   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH), color = "black", size = 0.3)+
+#   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH), color = "black", size = 0.3)+
+#   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH), color = "black", size = 0.3)+
+#   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = plotly::TeX("log \\left[H_4SiO_4\\right]"))+
+#    scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = plotly::TeX("log \\left[ \\frac{K^+}{H^+} \\right]"))+
+#   theme_bw()+
+#   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+#  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
+#  annotate("text", y = 4, x= -5.4, label = "gibbsite", size = 4)+
+#  annotate("text", y = 5.5, x= -4.5, label = "muscovite", size = 4)+
+#  annotate("text", y = 5.5, x= -3, label = "microcline", size = 4)+
+#  annotate("text", y = -2, x= -3, label = "kaolinite", size = 4)+
+#  geom_point(size=1, alpha =1) +
+#   scale_color_continuous(name = plotly::TeX("reaction progress, \\xi"))+ # add legend for reaction progress
+#  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
+#   annotate("text", y = -2.4, x=-5.85, label = "A", size = 6)+ # annotate point A
+#   annotate("text", y = -1.3, x=-4.55, label = "B", size = 6)+ # annotate point B
+#   annotate("text", y = -.8, x=-4.8, label = "C", size = 6)+ # annotate point C
+#   annotate("text", y = 3.7, x=-3.85, label = "D", size = 6)+ # annotate point D
+#   annotate("text", y = 3.7, x=-3.4, label = "E", size = 6) # annotate point E
+#     
+# plot_ABCDE_test %>% ggplotly() %>%
+#   layout(
+#     xaxis = list(
+#       title = plotly::TeX("\\text{reaction progress, } \\xi")),
+#     yaxis = list(
+#       title = plotly::TeX("\\text{moles mineral in system}"))) %>%
+#   config(mathjax = 'cdn')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
