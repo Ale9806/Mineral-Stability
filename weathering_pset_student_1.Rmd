@@ -783,31 +783,30 @@ plot_reactions_ABCDE_anim <- ABCDE %>%
 
 plot_minerals_rxns_ABCDE_anim <- ABCDE %>%
   dplyr::slice(seq(from = 1, to = nrow(ABCDE), by = 100)) %>% # select only every 100th point. Default "slice" is from CHNOSZ package
-  gather(key = "phase", value = "moles", mol_gibbs, mol_kaol, mol_musc) %>%
+  rename("Gibbsite" = "mol_gibbs", "Kaolonite" = "mol_kaol", "Muscovite" = "mol_musc") %>% 
+  gather(key = "phase", value = "moles", Gibbsite, Kaolonite, Muscovite) %>%
   plot_ly() %>%
   add_trace(x = ~phase,
-            y = ~moles,
+            y = ~moles*10^6,
             type = 'bar',
             frame = ~steps,
             color = ~phase) %>%
   layout(title = "Concentrations",
          xaxis = list(title = "Reaction progress"), # plotly::TeX("\\text{reaction progress, } \\xi")
-         yaxis = list(title = "Moles mineral in system", range = c(0, 50*10^-6))) # plotly::TeX("\\text{moles mineral in system}"
+         yaxis = list(title = "Micromoles mineral in system", range = c(0, 50))) # plotly::TeX("\\text{moles mineral in system}"
 
 
 
 
-subplot(plot_reactions_ABCDE_anim, plot_minerals_rxns_ABCDE_anim, nrows = 1, titleX = T, titleY = T) %>%
+subplot(plot_reactions_ABCDE_anim, plot_minerals_rxns_ABCDE_anim, nrows = 1, titleX = T, titleY = T) %>% layout(showlegend = FALSE) %>% 
   animation_opts(frame = 200, transition = 0, redraw = TRUE) #%>%
 #  config(mathjax = 'cdn')
 ```
 
 
-Slicing this up better:
 
-```{r}
-ABCDE
-```
+
+
 
 
 
