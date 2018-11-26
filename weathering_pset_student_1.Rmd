@@ -693,7 +693,9 @@ plot_minerals_ABCDE
 
 
 
-Plot an animation of the reaction progress
+## Animating the full reaction
+
+Finally, let's animate the changes in water chemistry and mineral abundances together and watch the full reaction unfold!
 ```{r, warning=FALSE, message=FALSE}
 plot_reactions_ABCDE_anim <- ABCDE %>%
   dplyr::slice(seq(from = 1, to = nrow(ABCDE), by = 100)) %>% # select only every 100th point. Default "slice" is from CHNOSZ package
@@ -733,7 +735,7 @@ subplot(plot_reactions_ABCDE_anim, plot_minerals_rxns_ABCDE_anim,
         titleY = T, 
         margin = 0.05) %>% 
   layout(showlegend = FALSE, title = "Reaction Animation") %>% 
-  animation_opts(frame = 200, transition = 0, redraw = TRUE)
+  animation_opts(frame = 300, transition = 0, redraw = TRUE)
 ```
 
 
