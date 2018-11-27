@@ -126,8 +126,8 @@ Now, we can plot the above equation as a vertical line with $\log\left[\text{H}_
 ```{r fig.height=4, fig.width=4}
 plot_stability_segment <- ggplot()+
   geom_vline(xintercept = gibb_intersect_H4SiO4) + # add vertical line for gibbsite - kaolinite equilibrium
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
@@ -158,8 +158,8 @@ We can add this line to our mineral stability plot using the geom_abline() funct
 plot_stability_segment2 <- ggplot()+
   geom_vline(xintercept = gibb_intersect_H4SiO4) +
   geom_abline(intercept = -9.97, slope = -3) + # add straight line in slope-intercept form for muscovite gibbsite equilibrium
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
@@ -174,8 +174,8 @@ Cool, it's starting to look like a mineral stability diagram, but as you can see
 plot_stability_segment3 <- ggplot()+
   geom_vline(xintercept = gibb_intersect_H4SiO4) +
   geom_abline(intercept = -9.97, slope = -3) +
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   scale_color_continuous(name = TeX("reaction progress, $\\xi$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
@@ -210,8 +210,8 @@ gibb_musc_edge_H4SiO4  # print that value
 plot_stability_segment4 <- ggplot()+
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = gibb_intersect_H4SiO4, yend = -3))+ # gibbsite - kaolinite equilibrium line
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = gibb_musc_edge_H4SiO4, yend = 6))+ # gibbsite - muscovite equilibrium line
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
@@ -295,8 +295,8 @@ plot_stability_segment5 <- ggplot()+
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH))+ # muscovite - kaolinite equilibrium line
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH))+ #microcline - muscovite equilibrium line
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH))+ #microcline - kaolinite equilibrium line
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
@@ -390,8 +390,8 @@ plot_AB <- k_spar_to_gibbs %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH), color = "black", size = 0.3)+
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
@@ -468,8 +468,8 @@ plot_ABC <- ABC %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color = steps))+
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH), color = "black", size = 0.3)+
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
@@ -565,8 +565,8 @@ plot_ABCD <- ABCD %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color = steps)
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH), color = "black", size = 0.3)+
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
@@ -656,8 +656,8 @@ plot_ABCDE <- ABCDE %>% ggplot(aes(x=log_H4SiO4, y = log_K_H_ratio, color = step
   geom_segment(aes(x = gibb_intersect_H4SiO4, y = gibb_intersect_KH, xend = kaol_musc_micr_eq_point_H4SiO4, yend = kaol_musc_micr_eq_point_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = musc_micr_edge_H4SiO4, yend = musc_micr_edge_KH), color = "black", size = 0.3)+
   geom_segment(aes(x = kaol_musc_micr_eq_point_H4SiO4, y = kaol_musc_micr_eq_point_KH, xend = -2, yend = kaol_micr_edge_KH), color = "black", size = 0.3)+
-  scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("log $\\left[$H$_4$SiO$_4$$\\right]$"))+
-   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("log $\\left[$ $\\frac{K$^+$}{H$^+$}$ $\\right]$"))+
+   scale_x_continuous(limits = c(-6, -2), expand = c(0, 0), name = TeX("$\\log\\lbrack H_4SiO_4\\rbrack$"))+
+   scale_y_continuous(limits = c(-3, 6), expand = c(0, 0), name = TeX("$\\log\\frac{\\lbrack K^+ \\rbrack}{\\lbrack H^+ \\rbrack}$"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
  theme(axis.title.y = element_text(angle = 0, vjust = .5, size = 11))+
