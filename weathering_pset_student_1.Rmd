@@ -100,7 +100,7 @@ $\text{Al}_3\text{Si}_2\text{O}_5\text{(OH)}_4 + 5\text{H}_2\text{O}  \leftright
 $\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 9\text{H}_2\text{O} + \text{H}^+ \leftrightharpoons 3\text{Al}\text{(OH)}_3  + \text{K}^+ + 3\text{H}_4\text{SiO}_4, K = \text{10}^{-9.97} \space \text{(reaction 2)}$
 
 **muscovite - kaolinite**
-$ 2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+, \space K = 10^{8.11} \space \text{(reaction 3)}$
+$2\text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 3\text{H}_2\text{O} + 2\text{H}^+ \leftrightharpoons 3\text{Al}_2\text{Si}_2\text{O}_5\text{(OH)}_4 + 2 \text {K}^+, \space K = 10^{8.11} \space \text{(reaction 3)}$
 
 **microcline - muscovite**
 $3\text{KAlSi}_3\text{O}_8 + 2\text{H}^+ + 12\text{H}_2\text{O}  \leftrightharpoons \text{KAl}_3\text{Si}_3\text{O}_{10}\text{(OH)}_2 + 2 \text {K}^+ + 6\text{H}_{4}\text{SiO}_{4},\space K = 10^{-11.865} \space \text{(reaction 4)}$
