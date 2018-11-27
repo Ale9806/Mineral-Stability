@@ -52,7 +52,6 @@ First, we need to load some packages. Packages contain functions that other smar
 ```{r setup, warning=FALSE, message=FALSE}
 # load libraries
 library(tidyverse) # dplyr, tidyr, ggplot
-library(openxlsx) # reading and writing excel file
 library(knitr) # generating reports
 library(plotly) # interactive plots
 library(CHNOSZ) # stability diagrams
