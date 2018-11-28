@@ -573,7 +573,7 @@ plot_ABC
 ```
 
 
-**Question 4** What changes in water chemistry occur as gibbsite is converted to kaolinite? How does this relate to the shape of the curve between B and C, and how it differs from the curve A to B?
+**Question 7** What changes in water chemistry occur as gibbsite is converted to kaolinite? How does this relate to the shape of the curve between B and C, and how it differs from the curve A to B?
 
 Plot accumulation of minerals with reaction progress
 ```{r fig.height=6, fig.width=6}
@@ -588,7 +588,7 @@ plot_minerals_ABC <- ABC %>% ggplot()+
 plot_minerals_ABC
 ```
 
-**Question 4** You have just plotted mineral abundance versus reaction progress. Why is there an inverse relationship between kaolinite and gibbsite after this point? How does this relate to your phase diagram?
+**Question 8** You have just plotted mineral abundance versus reaction progress. Why is there an inverse relationship between kaolinite and gibbsite after this point? How does this relate to your phase diagram?
 
 ## Microcline weathering to kaolinite
 
